@@ -1,0 +1,91 @@
+<header>
+  <h1>Shopping Cart</h1>
+</header>
+
+<section *ngIf="showAddForm" id="add-form-container" @fadeInAndOut>
+  <form #addForm="ngForm" (ngSubmit)="addItem(addForm.value)">
+    <label for="product">Product</label>
+    <input type="text" name="product" id="product" ngModel required />
+    <label for="price">Price</label>
+    <input
+      type="number"
+      min="0.00"
+      max="1000000.00"
+      step="0.01"
+      name="price"
+      id="price"
+      ngModel
+      required
+    />
+    <label for="quantity">Quantity</label>
+    <input
+      type="number"
+      min="0"
+      max="1000"
+      step="1"
+      name="quantity"
+      id="quantity"
+      ngModel
+      required
+    />
+    <button [disabled]="addForm.invalid" class="greenButton">Submit</button>
+    <i (click)="toggleAddForm()" class="fas fa-times close"></i>
+  </form>
+</section>
+
+<section class="button-container">
+  <button (click)="toggleAddForm()" class="greenButton">ADD</button>
+</section>
+
+<section id="table-header">
+  <p>#</p>
+  <p>Product</p>
+  <p>Price</p>
+  <p>Quantity</p>
+  <p>Delete</p>
+  <p>Edit</p>
+</section>
+
+<section class="item" *ngFor="let item of items; index as i">
+  <p>{{ i }}</p>
+  <p>{{ item.product }}</p>
+  <p>{{ item.price | currency }}</p>
+  <p (click)="toggleUpdateForm(i)">{{ item.quantity }}</p>
+  <p>
+    <button
+      type="button"
+      (click)="deleteItem(item.id)"
+      class="fas fa-trash"
+    ></button>
+  </p>
+  <p>
+    <button
+      type="button"
+      class="far fa-edit"
+      (click)="toggleUpdateForm(i)"
+    ></button>
+  </p>
+  <form
+    #updateForm="ngForm"
+    (ngSubmit)="updateItem(item, updateForm)"
+    class="update-form"
+    *ngIf="i === editIndex"
+  >
+    <p>{{ i }}</p>
+    <p>{{ item.product }}</p>
+    <p>{{ item.price | currency }}</p>
+    <p>
+      <input
+        type="number"
+        min="0"
+        max="1000"
+        step="1"
+        name="quantity"
+        id="quantity"
+        [ngModel]="item.quantity"
+      />
+    </p>
+    <p><i (click)="deleteItem(item.id)" class="fas fa-trash"></i></p>
+    <p><i (click)="toggleUpdateForm(i)" class="fas fa-times cancel"></i></p>
+  </form>
+</section>
